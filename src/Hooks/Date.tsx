@@ -2,39 +2,32 @@ import React, {
   createContext, useCallback, useContext, useState,
 } from 'react';
 
-interface IDate {
-  day: number;
-  month: number;
-  year: number;
-}
-
 interface DateContextData {
-  date: IDate;
-  updateDate(date: IDate): void;
+  date: Date;
+  updateDate(day: number, selectedDate: Date): void;
 }
 
 interface DateState {
-  date: IDate;
+  date: Date;
 }
 
 const DateContext = createContext<DateContextData>({} as DateContextData);
 
 const DateProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<DateState>(() => {
-    const currentDate = new Date();
-    const day = currentDate.getUTCDay();
-    const month = currentDate.getMonth();
-    const year = currentDate.getFullYear();
+    const date = new Date();
 
-    return {
-      date: {
-        day, month, year,
-      },
-    } as DateState;
+    return { date } as DateState;
   });
 
-  const updateDate = useCallback((date) => {
-    setData({ date });
+  const updateDate = useCallback((day, selectedDate) => {
+    if (selectedDate) {
+      const month = selectedDate.getMonth();
+      const year = selectedDate.getFullYear();
+
+      const date = new Date(year, month, day);
+      setData({ date });
+    }
   }, []);
 
   return (

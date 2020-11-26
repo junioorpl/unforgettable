@@ -2,12 +2,12 @@ import styled, { css } from 'styled-components/native';
 
 interface Props {
   weekDay: number;
-  isSelected: boolean;
+  // isSelected?: boolean;
 }
 
 export const Container = styled.View`
   flex-direction: column;
-  padding: 8px 8px;
+  padding: 8px 12px;
   background: #fff;
   height: 100%;
 `;
@@ -52,17 +52,39 @@ export const DaysRow = styled.View`
   height: 32px;
 `;
 
+export const DayButton = styled.TouchableOpacity`
+  margin: 0 auto;
+  width: 42px;
+  height: 42px;
+  justify-content: center;
+`;
+
 export const Day = styled.Text<Props>`
   flex: 1;
   font-size: 18px;
   text-align: center;
 
-  ${props => props.weekDay === 0 && css`
+  ${(props) => props.weekDay === 0 && css`
     font-weight: bold;
   `}
-  ${props => props.isSelected && css`
+  /* ${(props) => props.isSelected && css`
     background-color: #ddd;
-  `}
+  `} */
 `;
 
+export const RemindersContainer = styled.View`
+  margin-top: 8px;
+  width: 100%;
+  max-height: 365px;
+  border-radius: 4px;
+`;
 
+export const NoRemindersText = styled.Text`
+  margin: 64px auto;
+  font-weight: bold;
+  color: #bbb;
+  width: 250px;
+  line-height: 24px;
+  text-align:center;
+  font-size: 20px;
+`;

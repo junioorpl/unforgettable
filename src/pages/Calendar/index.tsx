@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import Header from '../../components/Header';
+import Reminder from '../../components/Reminder';
 
 import { wDays, mDays, months } from '../../data/year';
 import { useDate } from '../../Hooks/Date';
+import { useReminder } from '../../Hooks/Reminder';
 
 import {
   Container,
@@ -13,27 +16,20 @@ import {
   Month,
   Year,
   DaysContainer,
+  DayButton,
   Day,
-  DaysRow
+  DaysRow,
+  RemindersContainer,
+  NoRemindersText,
 } from './styles';
 
-interface IProps {
-  navigation: {
-    navigate(): void;
-  };
-}
-
-const Calendar: React.FC<IProps> = ({ navigation }) => {
-  const { updateDate } = useDate();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const Calendar: React.FC = () => {
+  const { updateDate, date } = useDate();
+  const { reminders } = useReminder();
+  const [selectedDate, setSelectedDate] = useState<Date>(date);
   const [calendarData, setCalendarData] = useState<string[][]>();
 
   useEffect(() => {
-    updateDate({
-      day: selectedDate.getUTCDate(),
-      month: selectedDate.getMonth(),
-      year: selectedDate.getFullYear()
-    })
     generateCalendarData(selectedDate);
   }, [selectedDate]);
 
@@ -83,17 +79,9 @@ const Calendar: React.FC<IProps> = ({ navigation }) => {
     setSelectedDate(date);
   }, [selectedDate]);
 
-  const handleSelectDate = useCallback((day) => {
-    const month = selectedDate.getMonth();
-    const year = selectedDate.getFullYear();
-
-    const date = new Date(year, month, parseInt(day));
-    setSelectedDate(date);
-  }, [selectedDate])
-
   return (
     <Container>
-      <Header navigation={navigation} />
+      <Header />
       <CalendarContainer>
         <CalendarHeader>
           <Icon name='arrow-left' size={18} onPress={handlePreviousMonth} />
@@ -111,14 +99,18 @@ const Calendar: React.FC<IProps> = ({ navigation }) => {
           {calendarData?.map((row, rIndex) => {
             const rowItems = row.map((day, cIndex) => {
               return (
-                <Day
+                <DayButton
                   key={cIndex}
-                  weekDay={rIndex}
-                  isSelected={day === String(selectedDate.getDate())}
-                  onPress={() => handleSelectDate(day)}
+                  disabled={day === '' || rIndex === 0}
+                  onPress={() => updateDate(Number(day), selectedDate)}
                 >
-                  {day !== '-1' ? day : ''}
-                </Day>
+                  <Day
+                    weekDay={rIndex}
+                  // isSelected={day === String(date.getDate())}
+                  >
+                    {day}
+                  </Day>
+                </DayButton>
               )
             })
             return (
@@ -127,6 +119,17 @@ const Calendar: React.FC<IProps> = ({ navigation }) => {
           })}
         </DaysContainer>
       </CalendarContainer>
+      <RemindersContainer>
+        {reminders && reminders.length > 0 ? (
+          <FlatList
+            data={reminders}
+            renderItem={(item: any) => (<Reminder item={item} />)}
+            keyExtractor={(item: any) => String(item.id)}
+          />
+        ) : (
+            <NoRemindersText>you do not have any reminders on this day</NoRemindersText>
+          )}
+      </RemindersContainer>
     </Container >
   );
 };

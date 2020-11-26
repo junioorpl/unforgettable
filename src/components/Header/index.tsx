@@ -1,18 +1,13 @@
-import { useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
   Container, TitleContainer, Title, Subtitle,
 } from './styles';
 
-interface Props {
-  navigation: {
-    navigate(route: string): void;
-  };
-}
-
-const Header: React.FC<Props> = ({ navigation }) => {
+const Header: React.FC = () => {
+  const navigation = useNavigation();
   const route = useRoute();
   const [isHome, setIsHome] = useState(true);
   const [icon, setIcon] = useState('plus');
@@ -35,7 +30,7 @@ const Header: React.FC<Props> = ({ navigation }) => {
       <Icon
         name={icon}
         size={24}
-        onPress={() => navigation.navigate(isHome ? 'AddReminder' : 'Calendar')}
+        onPress={() => navigation.navigate(isHome ? 'ReminderForm' : 'Calendar')}
       />
     </Container>
   );

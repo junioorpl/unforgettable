@@ -10,7 +10,7 @@ interface DotProps {
 
 export const Container = styled.View`
   flex-direction: column;
-  padding: 8px 8px;
+  padding: 8px 12px;
   background: #fff;
   height: 100%;
 `;
@@ -67,7 +67,7 @@ export const ColorButton = styled.TouchableOpacity<ButtonProps>`
   border-radius: 4px;
 
 
-  ${props => props.selected && css`
+  ${(props) => props.selected && css`
     background-color: #ddd;
   `}
 `;
@@ -77,7 +77,7 @@ export const ColorDot = styled.View<DotProps>`
   width: 12px;
   border-radius: 6px;
   margin: 4px auto;
-  background-color: ${props => props.color};
+  background-color: ${(props) => props.color};
 `;
 
 export const ColorName = styled.Text`
@@ -96,6 +96,20 @@ export const DoneButton = styled.TouchableOpacity`
 export const DoneText = styled.Text`
   margin: 0 auto;
   font-size: 16px;
+  color: #333;
   font-weight: bold;
 `;
 
+export const DeleteButton = styled.TouchableOpacity`
+  width: 100%;
+  background-color: #f66;
+  padding: 8px;
+  margin-top: 32px;
+`;
+
+export const DeleteButtonText = styled.Text`
+  margin: 0 auto;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+`;
