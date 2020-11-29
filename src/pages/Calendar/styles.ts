@@ -2,20 +2,21 @@ import styled, { css } from 'styled-components/native';
 
 interface Props {
   weekDay: number;
-  // isSelected?: boolean;
+  isSelected: boolean;
 }
 
 export const Container = styled.View`
   flex-direction: column;
-  padding: 8px 12px;
+  padding: 12px 12px;
   background: #fff;
   height: 100%;
 `;
 
 export const CalendarContainer = styled.View`
   margin: 8px 0;
-  border: 1px solid #ddd;
+  height: 42%;
   border-radius: 4px;
+  border: 1px solid #ddd;
 `;
 
 export const CalendarHeader = styled.View`
@@ -24,7 +25,7 @@ export const CalendarHeader = styled.View`
   padding: 8px 8px;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
 `;
 
 export const TextContainer = styled.View`
@@ -43,39 +44,38 @@ export const Year = styled.Text`
 `;
 
 export const DaysContainer = styled.View`
-  border: 1px solid #ddd;
 `;
 
 export const DaysRow = styled.View`
   flex-direction: row;
+  justify-content:space-around;
   margin-top: 12px;
-  height: 32px;
+  height: 9%;
 `;
 
 export const DayButton = styled.TouchableOpacity`
   margin: 0 auto;
-  width: 42px;
-  height: 42px;
+  width: 10%;
   justify-content: center;
 `;
 
 export const Day = styled.Text<Props>`
   flex: 1;
-  font-size: 18px;
+  font-size: 16px;
   text-align: center;
 
   ${(props) => props.weekDay === 0 && css`
     font-weight: bold;
   `}
-  /* ${(props) => props.isSelected && css`
+  ${(props) => props.isSelected && css`
     background-color: #ddd;
-  `} */
+  `}
 `;
 
 export const RemindersContainer = styled.View`
   margin-top: 8px;
   width: 100%;
-  max-height: 365px;
+  max-height: 40%;
   border-radius: 4px;
 `;
 

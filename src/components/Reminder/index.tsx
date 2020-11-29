@@ -1,10 +1,17 @@
-import { useNavigation } from '@react-navigation/native';
-import { format } from 'date-fns';
 import React, { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
-  Container, ReminderDesc, ReminderColor, ReminderCity, ReminderData,
+  Container,
+  ReminderDesc,
+  Temperature,
+  WeatherDesc,
+  Label,
+  ReminderColor,
+  ReminderCity,
+  ReminderData,
+  WeatherData,
 } from './styles';
 
 interface IColor {
@@ -14,10 +21,16 @@ interface IColor {
 
 interface IReminder {
   id: number;
-  date: Date;
+  date: string;
   desc: string;
   city: string;
   color: IColor;
+  weather: IWeather;
+}
+
+interface IWeather {
+  description: string;
+  temperature: number;
 }
 
 interface Props {
@@ -31,15 +44,20 @@ const Reminder: React.FC<Props> = ({ item }) => {
   const navigator = useNavigation();
 
   const handleReminderEdit = useCallback(() => {
-    navigator.navigate('ReminderForm', { ...reminder, date: format(reminder.date, 'yyyy-MM-dd') });
+    navigator.navigate('ReminderForm', { id: reminder.id, date: reminder.date });
   }, []);
 
   return (
-    <Container>
-      <ReminderColor color={reminder.color.value} />
-      <ReminderData>
-        <ReminderDesc>{reminder.desc}</ReminderDesc>
+    <Container key={reminder.id}>
+      <ReminderColor key={reminder.color.id} color={reminder.color.value} />
+      <WeatherData>
         <ReminderCity>{reminder.city}</ReminderCity>
+        <Temperature>{`${reminder.weather.temperature}ºC`}</Temperature>
+        <WeatherDesc>{reminder.weather.description}</WeatherDesc>
+      </WeatherData>
+      <ReminderData>
+        <Label>do not forget to</Label>
+        <ReminderDesc>{reminder.desc}</ReminderDesc>
       </ReminderData>
       <Icon
         name="edit"

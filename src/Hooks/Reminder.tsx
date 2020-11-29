@@ -2,15 +2,18 @@ import React, {
   createContext, useCallback, useContext, useEffect, useState,
 } from 'react';
 
-import { isSameDay } from 'date-fns';
-import { useDate } from './Date';
-
 interface IReminder {
   id: number;
-  date: Date;
+  date: string;
   desc: string;
   city: string;
   color: IColor;
+  weather: IWeather;
+}
+
+interface IWeather {
+  description: string;
+  temperature: number;
 }
 
 interface IColor {
@@ -20,59 +23,71 @@ interface IColor {
 
 interface ReminderContextData {
   reminders: IReminder[];
-  getRemindersFromDay(day: Date): void;
-  addReminder(reminder: IReminder): void;
-  updateReminder(reminder: IReminder): void;
-  deleteReminder(id: number): void;
+  getReminder(id: number): IReminder | undefined;
+  getRemindersFromDay(date: string): IReminder[];
+  addReminder(reminder: IReminder): IReminder[];
+  updateReminder(reminder: IReminder): IReminder[];
+  deleteReminder(reminder: IReminder): IReminder[];
 }
 
 interface ReminderState {
   allReminders: IReminder[];
-  reminders: IReminder[];
 }
 
 const ReminderContext = createContext<ReminderContextData>({} as ReminderContextData);
 
 const ReminderProvider: React.FC = ({ children }) => {
-  const { date } = useDate();
   const [data, setData] = useState<ReminderState>(
-    () => ({ allReminders: [], reminders: [] } as ReminderState),
+    () => ({ allReminders: [] } as ReminderState),
   );
 
-  const getRemindersFromDay = useCallback((day) => {
-    const dayReminders = data.allReminders.filter((item) => isSameDay(item.date, day));
-    setData({ ...data, reminders: dayReminders });
-  }, [data]);
+  const getReminder = useCallback((id) => {
+    const foundReminder = data.allReminders.find((item) => item.id === id);
+    return foundReminder;
+  }, [data.allReminders]);
+
+  const getRemindersFromDay = useCallback((date) => {
+    const dayReminders = data.allReminders.filter(
+      (item) => date === item.date,
+    );
+    // console.log(dayReminders);
+    return dayReminders;
+  }, [data.allReminders]);
 
   const addReminder = useCallback((reminder) => {
     const arr = data.allReminders;
     arr.push(reminder);
-    setData({ ...data, allReminders: arr });
-    getRemindersFromDay(date);
+    setData({ allReminders: arr });
+    return getRemindersFromDay(reminder.date);
   }, []);
 
   const updateReminder = useCallback((reminder) => {
     let arr = data.allReminders;
     arr = arr.map((item) => (item.id === reminder.id ? reminder : item));
-    setData({ ...data, allReminders: arr });
-    getRemindersFromDay(date);
+    setData({ allReminders: arr });
+
+    // returns instantly the reminders of the day
+    arr = arr.filter(
+      (item) => reminder.date === item.date,
+    );
+    return arr;
   }, []);
 
-  const deleteReminder = useCallback((id) => {
-    const arr = data.allReminders;
-    const foundIndex = arr.findIndex((item) => item.id === id);
+  const deleteReminder = useCallback((reminder) => {
+    let arr = data.allReminders;
+    const foundIndex = arr.findIndex((item) => item.id === reminder.id);
     if (foundIndex > -1) { arr.splice(foundIndex, 1); }
-    setData({ ...data, allReminders: arr });
-    getRemindersFromDay(date);
+    setData({ allReminders: arr });
+    arr = arr.filter(
+      (item) => reminder.date === item.date,
+    );
+    return arr;
   }, []);
-
-  useEffect(() => {
-    getRemindersFromDay(date);
-  }, [data.allReminders, date]);
 
   return (
     <ReminderContext.Provider value={{
-      reminders: data.reminders,
+      reminders: data.allReminders,
+      getReminder,
       getRemindersFromDay,
       addReminder,
       updateReminder,

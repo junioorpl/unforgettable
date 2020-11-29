@@ -1,10 +1,6 @@
 import styled from 'styled-components/native';
 
-interface IProps {
-  isHome: boolean;
-}
-
-export const Container = styled.SafeAreaView<IProps>`
+export const Container = styled.SafeAreaView`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;

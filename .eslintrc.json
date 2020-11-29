@@ -23,6 +23,11 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "no-plusplus": "off",
+    "no-unused-expressions": "off",
+    "no-unused-vars": "off",
+    "react/no-array-index-key": "off",
+    "no-use-before-define": "off",
     "react/jsx-filename-extension": [
       1,
       {

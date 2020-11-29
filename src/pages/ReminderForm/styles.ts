@@ -1,14 +1,20 @@
 import styled, { css } from 'styled-components/native';
+import { Picker } from 'react-native';
 
 interface ButtonProps {
   selected: boolean;
+}
+
+interface DoneButtonProps {
+  disabled: boolean;
 }
 
 interface DotProps {
   color: string;
 }
 
-export const Container = styled.View`
+export const Container = styled.KeyboardAvoidingView`
+  flex: 1;
   flex-direction: column;
   padding: 8px 12px;
   background: #fff;
@@ -86,9 +92,9 @@ export const ColorName = styled.Text`
   font-weight: bold;
 `;
 
-export const DoneButton = styled.TouchableOpacity`
+export const DoneButton = styled.TouchableOpacity<DoneButtonProps>`
   width: 100%;
-  background-color: #ddd;
+  background-color: ${(props) => (props.disabled ? '#ddd' : '#77dd77')};
   padding: 8px;
   margin-top: 32px;
 `;
